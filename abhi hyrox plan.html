@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhi — HYROX Double Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap');
+:root{--black:#0a0a0a;--dark:#111318;--card:#16191f;--border:#22262e;--orange:#f4622a;--orange-dim:#c44d20;--yellow:#f5c842;--green:#3ecf6a;--red:#e84040;--blue:#4a9eff;--text:#e8eaf0;--muted:#6b7280;--label:#9ca3af}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.hero{background:var(--dark);border-bottom:1px solid var(--border);padding:32px 20px 24px;position:relative;overflow:hidden}
+.hero::before{content:'HYROX';position:absolute;right:-10px;top:-18px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:110px;color:rgba(244,98,42,0.06);pointer-events:none;user-select:none}
+.hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;color:var(--orange);text-transform:uppercase;margin-bottom:6px}
+.hero-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:50px;line-height:1;color:var(--text)}
+.hero-name span{color:var(--orange)}
+.hero-sub{font-size:13px;color:var(--muted);margin-top:6px}
+.countdown-bar{margin-top:18px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.countdown-num{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;color:var(--orange);line-height:1}
+.countdown-label{font-size:12px;color:var(--muted);line-height:1.4}
+.countdown-label strong{display:block;font-size:14px;color:var(--text);font-weight:600}
+.flag{margin-left:auto;background:rgba(244,98,42,0.12);border:1px solid var(--orange-dim);color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;padding:5px 11px;border-radius:6px;text-transform:uppercase}
+.injury-banner{display:flex;gap:8px;padding:10px 20px;background:var(--dark);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.injury-banner::-webkit-scrollbar{display:none}
+.inj-pill{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer}
+.inj-pill.knee{border-color:rgba(245,200,66,0.4);color:var(--yellow)}
+.inj-pill.cervical{border-color:rgba(232,64,64,0.4);color:var(--red)}
+.inj-pill.goal{border-color:rgba(62,207,106,0.4);color:var(--green)}
+.inj-dot{width:7px;height:7px;border-radius:50%}
+.inj-pill.knee .inj-dot{background:var(--yellow)}
+.inj-pill.cervical .inj-dot{background:var(--red)}
+.inj-pill.goal .inj-dot{background:var(--green)}
+.tabs{display:flex;overflow-x:auto;background:var(--dark);border-bottom:1px solid var(--border);padding:0 12px;scrollbar-width:none;position:sticky;top:0;z-index:10}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:13px 14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.2s,border-color 0.2s;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.tab:hover:not(.active){color:var(--label)}
+.section{display:none;padding:18px 16px 60px;max-width:680px;margin:0 auto}
+.section.active{display:block}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;margin-bottom:3px}
+.section-desc{font-size:12px;color:var(--muted);margin-bottom:20px}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px}
+.score-card.full{grid-column:1/-1}
+.score-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.score-value{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;line-height:1}
+.score-note{font-size:11px;color:var(--muted);margin-top:3px}
+.score-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:4px;margin-top:5px;text-transform:uppercase}
+.badge-green{background:rgba(62,207,106,0.15);color:var(--green)}
+.badge-yellow{background:rgba(245,200,66,0.15);color:var(--yellow)}
+.badge-red{background:rgba(232,64,64,0.15);color:var(--red)}
+.badge-orange{background:rgba(244,98,42,0.15);color:var(--orange)}
+.alert{border-radius:10px;padding:13px 15px;margin-bottom:12px;font-size:13px;line-height:1.6;border-left:3px solid}
+.alert-red{background:rgba(232,64,64,0.08);border-color:var(--red)}
+.alert-yellow{background:rgba(245,200,66,0.08);border-color:var(--yellow)}
+.alert-green{background:rgba(62,207,106,0.08);border-color:var(--green)}
+.alert-orange{background:rgba(244,98,42,0.08);border-color:var(--orange)}
+.alert strong{display:block;font-weight:600;margin-bottom:3px;font-size:14px}
+.prog-wrap{margin-bottom:12px}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px}
+.zone-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.zone-row:last-child{border-bottom:none}
+.zone-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;min-width:28px;color:var(--label)}
+.zone-name{font-size:13px;font-weight:600;color:var(--text)}
+.zone-bpm{font-size:11px;color:var(--muted)}
+.zone-range{height:8px;border-radius:4px;margin-top:4px}
+.zone-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.week-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.week-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.week-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:var(--orange);line-height:1;min-width:32px}
+.week-info{flex:1}
+.week-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px}
+.week-dates{font-size:11px;color:var(--muted)}
+.week-chevron{color:var(--muted);font-size:16px;transition:transform 0.25s}
+.week-card.open .week-chevron{transform:rotate(180deg)}
+.week-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.week-card.open .week-body{display:block}
+.week-focus{font-size:11px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px}
+.day-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.day-row:last-child{border-bottom:none}
+.day-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;min-width:30px;color:var(--label);padding-top:2px}
+.day-content{flex:1}
+.day-content strong{color:var(--text);display:block;margin-bottom:2px}
+.day-content span{color:var(--muted);font-size:12px}
+.rest-pill{background:rgba(107,114,128,0.15);color:var(--muted);font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:1px;text-transform:uppercase}
+.tracker-week-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin:18px 0 8px}
+.tracker-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.tracker-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.tracker-row:last-child{border-bottom:none}
+.tracker-row:hover{background:rgba(244,98,42,0.04)}
+.tracker-row.done{opacity:0.5}
+.tracker-cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s}
+.tracker-row.done .tracker-cb{background:var(--green);border-color:var(--green);color:#000}
+.tracker-date{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;min-width:36px;color:var(--label)}
+.tracker-info{flex:1}
+.tracker-name{font-size:13px;font-weight:600;color:var(--text)}
+.tracker-sub{font-size:11px;color:var(--muted)}
+.tracker-type{font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
+.type-session{background:rgba(244,98,42,0.15);color:var(--orange)}
+.type-rest{background:rgba(107,114,128,0.12);color:var(--muted)}
+.type-race{background:rgba(62,207,106,0.15);color:var(--green)}
+.type-taper{background:rgba(74,158,255,0.15);color:var(--blue)}
+.tracker-progress-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px}
+.tracker-progress-bar h4{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:10px}
+.tracker-stats{display:flex;gap:16px;margin-top:10px}
+.tracker-stat{text-align:center}
+.tracker-stat-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--orange);line-height:1}
+.tracker-stat-label{font-size:11px;color:var(--muted)}
+.station-table{width:100%;border-collapse:collapse;margin-bottom:14px}
+.station-table th{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+.station-table td{padding:10px;font-size:12px;border-bottom:1px solid rgba(34,38,46,0.5);vertical-align:top}
+.station-table tr:last-child td{border-bottom:none}
+.station-name{font-weight:600;color:var(--text);font-size:13px}
+.station-mod{font-size:11px;color:var(--orange);font-weight:600;margin-top:2px}
+.station-risk{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.supp-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
+.supp-row:last-child{border-bottom:none}
+.supp-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.supp-name{font-weight:600;color:var(--text);font-size:14px}
+.supp-detail{color:var(--muted);font-size:11px;margin-top:2px}
+.supp-dose{margin-left:auto;text-align:right;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--orange);white-space:nowrap}
+.sleep-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.sleep-block h4{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.sleep-block ul{list-style:none}
+.sleep-block ul li{font-size:13px;color:var(--label);padding:3px 0 3px 16px;position:relative}
+.sleep-block ul li::before{content:'—';position:absolute;left:0;color:var(--orange);font-size:12px}
+.meal-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.meal-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.meal-time{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--orange);min-width:60px}
+.meal-name{font-weight:600;font-size:14px;color:var(--text)}
+.meal-cal{margin-left:auto;font-size:12px;color:var(--muted)}
+.meal-body{padding:10px 14px;font-size:13px;color:var(--label)}
+.meal-body ul{list-style:none}
+.meal-body ul li{padding:2px 0 2px 14px;position:relative}
+.meal-body ul li::before{content:'·';position:absolute;left:0;color:var(--orange)}
+.timeline-item{display:flex;gap:12px;margin-bottom:14px;position:relative}
+.timeline-item::before{content:'';position:absolute;left:17px;top:36px;bottom:-14px;width:1px;background:var(--border)}
+.timeline-item:last-child::before{display:none}
+.timeline-dot{width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.timeline-time{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--orange)}
+.timeline-title{font-weight:600;font-size:14px;color:var(--text)}
+.timeline-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.sub-heading{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;text-transform:uppercase;color:var(--label);margin:18px 0 10px}
+.pace-widget{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.pace-widget h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;margin-bottom:12px}
+.pace-station{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.pace-station:last-child{border-bottom:none}
+.pace-icon{font-size:18px;min-width:26px;text-align:center}
+.pace-name{flex:1;font-weight:600;color:var(--text)}
+.pace-effort{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px}
+.pace-heat2{font-size:11px;color:var(--muted)}
+.race-flag-banner{background:linear-gradient(135deg,rgba(244,98,42,0.15),rgba(244,98,42,0.05));border:1px solid var(--orange-dim);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px}
+.race-flag-banner h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--orange)}
+.race-flag-banner p{font-size:13px;color:var(--muted);margin:4px 0 0}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--dark);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:24px 20px 40px;width:100%;max-width:680px;max-height:80vh;overflow-y:auto}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--label);line-height:1.7;margin-bottom:10px}
+.modal-close{float:right;background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;line-height:28px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">HYROX Double &mdash; Client Plan &middot; Brawn Fitness</div>
+  <div class="hero-name">ABHI<span>'s</span><br>RACE PLAN</div>
+  <div class="hero-sub">Age 26 &middot; 90kg &middot; 23% BF &middot; <strong style="color:var(--label)">Knee 80% + Cervical Issue</strong></div>
+  <div class="countdown-bar">
+    <div>
+      <div class="countdown-num" id="daysLeft">31</div>
+      <div class="countdown-label">days<br><strong>to race day</strong></div>
+    </div>
+    <div style="flex:1;padding-left:6px">
+      <div style="font-size:11px;color:var(--muted)">HYROX Double</div>
+      <div style="font-weight:600;font-size:14px">26 July 2026</div>
+      <div style="font-size:11px;color:var(--orange);margin-top:3px">Mission: Safe Finish</div>
+    </div>
+    <div class="flag">DOUBLE</div>
+  </div>
+</div>
+
+<div class="injury-banner">
+  <div class="inj-pill knee" onclick="openModal('kneeModal')"><div class="inj-dot"></div>Knee 80%</div>
+  <div class="inj-pill cervical" onclick="openModal('cervModal')"><div class="inj-dot"></div>Cervical Issue</div>
+  <div class="inj-pill goal" onclick="openModal('goalModal')"><div class="inj-dot"></div>Goal: Finish</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('assessment',this)">Assessment</button>
+  <button class="tab" onclick="showTab('program',this)">4-Week Plan</button>
+  <button class="tab" onclick="showTab('tracker',this)">Tracker</button>
+  <button class="tab" onclick="showTab('stations',this)">Stations</button>
+  <button class="tab" onclick="showTab('nutrition',this)">Nutrition</button>
+  <button class="tab" onclick="showTab('recovery',this)">Recovery</button>
+  <button class="tab" onclick="showTab('strength',this)">Strength</button>
+  <button class="tab" onclick="showTab('supps',this)">Supps</button>
+  <button class="tab" onclick="showTab('raceday',this)">Race Day</button>
+</div>
+
+<!-- ASSESSMENT -->
+<div id="assessment" class="section active">
+  <div class="section-title">Assessment Results</div>
+  <div class="section-desc">Tested 25 June 2026 &middot; Brawn Fitness</div>
+  <div class="score-grid">
+    <div class="score-card"><div class="score-label">Body Weight</div><div class="score-value" style="color:var(--text)">90<span style="font-size:14px;color:var(--muted)">kg</span></div><div class="score-note">Fat 23% &middot; Muscle 40kg</div><span class="score-badge badge-yellow">Moderate</span></div>
+    <div class="score-card"><div class="score-label">Mobility</div><div class="score-value" style="color:var(--green)">10<span style="font-size:14px;color:var(--muted)">/10</span></div><div class="score-note">Excellent</div><span class="score-badge badge-green">Excellent</span></div>
+    <div class="score-card"><div class="score-label">1km Run</div><div class="score-value" style="color:var(--red)">7:00</div><div class="score-note">HR 179 peak</div><span class="score-badge badge-red">Needs Work</span></div>
+    <div class="score-card"><div class="score-label">HR Recovery</div><div class="score-value" style="color:var(--green)">Fast</div><div class="score-note">&minus;19bpm in 20sec</div><span class="score-badge badge-green">Strong</span></div>
+    <div class="score-card"><div class="score-label">2000m Row</div><div class="score-value" style="color:var(--yellow)">8:32</div><div class="score-note">HR peak 180</div><span class="score-badge badge-yellow">Moderate</span></div>
+    <div class="score-card"><div class="score-label">Wall Ball x30</div><div class="score-value" style="color:var(--green)">&#10003;</div><div class="score-note">Unbroken set</div><span class="score-badge badge-green">Strong</span></div>
+    <div class="score-card"><div class="score-label">Farmer Carry</div><div class="score-value" style="color:var(--yellow)">3:51</div><div class="score-note">20kg &middot; 200m</div><span class="score-badge badge-yellow">Moderate</span></div>
+    <div class="score-card"><div class="score-label">Burpees 60m</div><div class="score-value" style="color:var(--red)">4:00</div><div class="score-note">Broad jump style</div><span class="score-badge badge-red">Needs Work</span></div>
+  </div>
+  <div class="sub-heading">Capacity Breakdown</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
+    <div class="prog-wrap"><div class="prog-label"><span>Aerobic Base</span><span style="color:var(--red)">40%</span></div><div class="prog-bar"><div class="prog-fill" style="width:40%;background:var(--red)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Muscular Endurance</span><span style="color:var(--yellow)">65%</span></div><div class="prog-bar"><div class="prog-fill" style="width:65%;background:var(--yellow)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>HR Recovery Speed</span><span style="color:var(--green)">75%</span></div><div class="prog-bar"><div class="prog-fill" style="width:75%;background:var(--green)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Conditioning</span><span style="color:var(--red)">35%</span></div><div class="prog-bar"><div class="prog-fill" style="width:35%;background:var(--red)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Mobility</span><span style="color:var(--green)">95%</span></div><div class="prog-bar"><div class="prog-fill" style="width:95%;background:var(--green)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Body Composition</span><span style="color:var(--yellow)">55%</span></div><div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--yellow)"></div></div></div>
+  </div>
+  <div class="sub-heading">HR Zones (Max ~182 bpm)</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div class="zone-row"><div class="zone-num">Z1</div><div><div class="zone-name">Recovery</div><div class="zone-bpm">&lt;109 bpm</div><div class="zone-range" style="width:20%;background:var(--green)"></div><div class="zone-desc">Warm up, cool down, rest day walks</div></div></div>
+    <div class="zone-row"><div class="zone-num">Z2</div><div><div class="zone-name">Aerobic Base &#8592; Priority</div><div class="zone-bpm">109&ndash;127 bpm</div><div class="zone-range" style="width:40%;background:var(--blue)"></div><div class="zone-desc">Most training runs HERE. Builds the engine.</div></div></div>
+    <div class="zone-row"><div class="zone-num">Z3</div><div><div class="zone-name">Tempo &mdash; Race Pace Target</div><div class="zone-bpm">128&ndash;145 bpm</div><div class="zone-range" style="width:58%;background:var(--yellow)"></div><div class="zone-desc">Sustainable race effort. Aim to stay here.</div></div></div>
+    <div class="zone-row"><div class="zone-num">Z4</div><div><div class="zone-name">Threshold</div><div class="zone-bpm">146&ndash;163 bpm</div><div class="zone-range" style="width:75%;background:var(--orange)"></div><div class="zone-desc">Hard intervals. Week 2&ndash;3 only.</div></div></div>
+    <div class="zone-row"><div class="zone-num">Z5</div><div><div class="zone-name">Max Effort</div><div class="zone-bpm">164&ndash;182 bpm</div><div class="zone-range" style="width:95%;background:var(--red)"></div><div class="zone-desc">His 1km run hit 179. Avoid sustaining this in race.</div></div></div>
+  </div>
+  <div class="alert alert-red"><strong>Biggest Gap &mdash; Aerobic Base + Run Speed</strong>7 min/km means the 8km total in HYROX will hurt. Zone 2 running is priority #1 this block.</div>
+  <div class="alert alert-yellow"><strong>Knee + Cervical &mdash; Managed Not Ignored</strong>Every session modified. Tap the pills above for full injury protocols.</div>
+  <div class="alert alert-green"><strong>Real Strengths to Build On</strong>Wall ball unbroken, HR recovery fast, mobility 10/10. These are real race advantages.</div>
+</div>
+
+<!-- PROGRAM -->
+<div id="program" class="section">
+  <div class="section-title">4-Week Program</div>
+  <div class="section-desc">26 Jun &ndash; 26 Jul 2026 &middot; Starts today &middot; Modified for knee + cervical</div>
+  <div class="week-card" id="w1">
+    <div class="week-header" onclick="toggleWeek('w1')"><div class="week-num">W1</div><div class="week-info"><div class="week-title">Base Exposure + Movement Quality</div><div class="week-dates">26 Jun &ndash; 2 Jul &middot; Starts TODAY &middot; 4 sessions</div></div><div class="week-chevron">&#9660;</div></div>
+    <div class="week-body">
+      <div class="week-focus">Focus: Aerobic base &middot; Station familiarity &middot; Protect knee + neck</div>
+      <div class="day-row" style="background:rgba(244,98,42,0.07);border-radius:8px;border-left:3px solid var(--orange);padding:10px 8px">
+        <div class="day-label" style="color:var(--orange)">FRI<br><span style="font-size:9px;color:var(--orange)">TODAY</span></div>
+        <div class="day-content"><strong>Session 1 &mdash; Aerobic Base + Station Intro</strong><span>20 min easy jog Zone 2 (HR &lt;130) &middot; Row 1500m easy &middot; Wall ball 3x10 &middot; Ski erg 500m x2. Total 45 min. 60% effort only.</span></div>
+      </div>
+      <div class="day-row"><div class="day-label">SAT</div><div class="day-content"><strong>Session 2 &mdash; Strength A</strong><span>Goblet squat 3x15 &middot; Romanian deadlift 3x12 &middot; Loaded step-up 3x10 each leg &middot; Plank circuit &middot; VMO extensions 3x15. Ice knee after.</span></div></div>
+      <div class="day-row"><div class="day-label">SUN</div><div class="day-content"><strong>Active Recovery</strong><span>30 min walk &middot; Mobility 15 min &middot; Chin tucks x10 &middot; Ice knee &middot; Sleep 9 hrs tonight</span></div></div>
+      <div class="day-row"><div class="day-label">MON</div><div class="day-content"><strong>Session 3 &mdash; Carry + Conditioning</strong><span>Farmer carry 2x15kg 100m x3 &middot; Step-back burpees 3x12 &middot; Sled push 40kg 25m x4 &middot; Sled pull 40kg 25m x4. 60% effort.</span></div></div>
+      <div class="day-row"><div class="day-label">TUE</div><div class="day-content"><span class="rest-pill">Rest</span><span>Foam roll quads &middot; Chin tucks &middot; 20 min walk</span></div></div>
+      <div class="day-row"><div class="day-label">WED</div><div class="day-content"><strong>Session 4 &mdash; Full Circuit x2 Rounds</strong><span>Row 500m &rarr; Wall ball x20 &rarr; Ski erg 250m &rarr; Farmer carry 100m &rarr; Burpees x15. Rest 3 min. Repeat. 65% effort.</span></div></div>
+      <div class="day-row"><div class="day-label">THU</div><div class="day-content"><span class="rest-pill">Rest</span><span>VMO extensions &middot; Neck mobility &middot; Ice knee</span></div></div>
+    </div>
+  </div>
+  <div class="week-card" id="w2">
+    <div class="week-header" onclick="toggleWeek('w2')"><div class="week-num">W2</div><div class="week-info"><div class="week-title">Build Work Capacity</div><div class="week-dates">3 Jul &ndash; 9 Jul &middot; 4 sessions</div></div><div class="week-chevron">&#9660;</div></div>
+    <div class="week-body">
+      <div class="week-focus">Focus: Volume up &middot; First HYROX simulation &middot; Conditioning build</div>
+      <div class="day-row"><div class="day-label">MON</div><div class="day-content"><strong>Session 1 &mdash; Run + Row Intervals</strong><span>5x500m run at 70% (HR &lt;165), 90sec rest &middot; 4x500m row, 90sec rest. Total 50 min.</span></div></div>
+      <div class="day-row"><div class="day-label">TUE</div><div class="day-content"><span class="rest-pill">Rest</span> <span>Ice knee &middot; Neck stretches &middot; Sleep 9 hrs</span></div></div>
+      <div class="day-row"><div class="day-label">WED</div><div class="day-content"><strong>Session 2 &mdash; Station Circuit x4 Rounds</strong><span>Wall ball x20 &rarr; Sled push 50kg 25m &rarr; Farmer carry 2x15kg 100m &rarr; Burpees x12 &rarr; Ski erg 300m. 3 min rest between rounds.</span></div></div>
+      <div class="day-row"><div class="day-label">THU</div><div class="day-content"><span class="rest-pill">Rest</span></div></div>
+      <div class="day-row"><div class="day-label">FRI</div><div class="day-content"><strong>Session 3 &mdash; Single HYROX Simulation 70%</strong><span>Full race order, one heat only. Time each station. Note where he breaks mentally.</span></div></div>
+      <div class="day-row"><div class="day-label">SAT</div><div class="day-content"><span class="rest-pill">Full Rest</span></div></div>
+      <div class="day-row"><div class="day-label">SUN</div><div class="day-content"><strong>Session 4 &mdash; Zone 2 Run</strong><span>35 min continuous easy run &middot; HR 120&ndash;140 &middot; Pacing practice only.</span></div></div>
+    </div>
+  </div>
+  <div class="week-card" id="w3">
+    <div class="week-header" onclick="toggleWeek('w3')"><div class="week-num">W3</div><div class="week-info"><div class="week-title">Race Simulation + Stress Exposure</div><div class="week-dates">10 Jul &ndash; 16 Jul &middot; 4 sessions</div></div><div class="week-chevron">&#9660;</div></div>
+    <div class="week-body">
+      <div class="week-focus">Focus: Back-to-back simulation &middot; Pacing mastery &middot; Mental toughness</div>
+      <div class="day-row"><div class="day-label">MON</div><div class="day-content"><strong>&#128273; Session 1 &mdash; Double Simulation</strong><span>45 min effort (mock race 1) &rarr; 25 min full rest &rarr; 45 min effort (mock race 2). 65% effort only. Body learns what Double feels like.</span></div></div>
+      <div class="day-row"><div class="day-label">TUE</div><div class="day-content"><span class="rest-pill">Full Rest</span> <span>Ice knee &middot; Neck stretches &middot; Sleep 9 hrs minimum</span></div></div>
+      <div class="day-row"><div class="day-label">WED</div><div class="day-content"><strong>Session 2 &mdash; Weakness Targeting</strong><span>Running intervals 6x400m &middot; Burpees 4x15 &middot; Sled pull 40kg x4 sets &middot; Ski erg 4x250m</span></div></div>
+      <div class="day-row"><div class="day-label">THU</div><div class="day-content"><span class="rest-pill">Rest</span></div></div>
+      <div class="day-row"><div class="day-label">FRI</div><div class="day-content"><strong>Session 3 &mdash; Peak HYROX Simulation 80%</strong><span>Single full race. Hardest training day. Time every station. Identify mental and physical break points.</span></div></div>
+      <div class="day-row"><div class="day-label">SAT</div><div class="day-content"><span class="rest-pill">Full Rest</span></div></div>
+      <div class="day-row"><div class="day-label">SUN</div><div class="day-content"><strong>Session 4 &mdash; Flush + Mobility</strong><span>20 min walk &middot; Light row 1000m &middot; Mobility 20 min. No intensity.</span></div></div>
+    </div>
+  </div>
+  <div class="week-card" id="w4">
+    <div class="week-header" onclick="toggleWeek('w4')"><div class="week-num">W4</div><div class="week-info"><div class="week-title">Taper &mdash; Trust the Work</div><div class="week-dates">16 Jul &ndash; 26 Jul &middot; 2&ndash;3 light sessions</div></div><div class="week-chevron">&#9660;</div></div>
+    <div class="week-body">
+      <div class="week-focus">Focus: Freshness &middot; No new stimulus &middot; Protect knee &middot; Bank sleep</div>
+      <div class="day-row"><div class="day-label">MON</div><div class="day-content"><strong>Taper 1 &mdash; Light Station Touch</strong><span>Each station x8 reps at 50%. Quality only. 30 min total. No fatigue target.</span></div></div>
+      <div class="day-row"><div class="day-label">TUE</div><div class="day-content"><span class="rest-pill">Rest</span></div></div>
+      <div class="day-row"><div class="day-label">WED</div><div class="day-content"><strong>Taper 2 &mdash; Short Run + Row</strong><span>15 min easy jog &middot; 1000m easy row. Done. Nothing more.</span></div></div>
+      <div class="day-row"><div class="day-label">THU</div><div class="day-content"><span class="rest-pill">Rest</span></div></div>
+      <div class="day-row"><div class="day-label">FRI</div><div class="day-content"><strong>Taper 3 &mdash; Race Feel (22 Jul)</strong><span>10 min jog &middot; 2 race-pace bursts x30sec &middot; Mobility 15 min. Last session. Done.</span></div></div>
+      <div class="day-row"><div class="day-label">SAT</div><div class="day-content"><span class="rest-pill">Full Rest</span> <span>Pack gear. Big carb meal. Sleep early.</span></div></div>
+      <div class="day-row"><div class="day-label">SUN</div><div class="day-content" style="color:var(--orange);font-weight:700;font-family:'Barlow Condensed',sans-serif;font-size:16px">&#127937; RACE DAY &mdash; 26 JULY 2026</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="tracker" class="section">
+  <div class="section-title">Session Tracker</div>
+  <div class="section-desc">Tap to mark complete &middot; Progress saves in browser</div>
+  <div class="tracker-progress-bar">
+    <h4>&#128293; Overall Progress</h4>
+    <div class="prog-bar" style="height:10px"><div class="prog-fill" id="overallFill" style="width:0%;background:var(--orange);transition:width 0.5s"></div></div>
+    <div class="tracker-stats">
+      <div class="tracker-stat"><div class="tracker-stat-num" id="statDone">0</div><div class="tracker-stat-label">Done</div></div>
+      <div class="tracker-stat"><div class="tracker-stat-num" id="statLeft">14</div><div class="tracker-stat-label">Left</div></div>
+      <div class="tracker-stat"><div class="tracker-stat-num" id="statDays">31</div><div class="tracker-stat-label">Days to race</div></div>
+    </div>
+  </div>
+  <div id="trackerList"></div>
+</div>
+
+<!-- STATIONS -->
+<div id="stations" class="section">
+  <div class="section-title">Station Guide</div>
+  <div class="section-desc">9 stations &middot; Modified for knee + cervical &middot; Pacing targets</div>
+  <div class="alert alert-orange"><strong>Golden Pacing Rule</strong>Heat 1 at 70% effort. Heat 2 at 80%. Going harder in heat 1 = unable to finish heat 2. This is the single most important coaching cue.</div>
+  <div class="pace-widget">
+    <h4>&#9889; Effort Per Station</h4>
+    <div class="pace-station"><div class="pace-icon">&#127939;</div><div class="pace-name">Run (1km x8)</div><div><div class="pace-effort" style="color:var(--yellow)">H1: Easy jog</div><div class="pace-heat2">H2: Steady pace</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#127935;</div><div class="pace-name">Ski Erg (1000m x4)</div><div><div class="pace-effort" style="color:var(--yellow)">H1: 65%</div><div class="pace-heat2">H2: 75% &middot; Chin tuck</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#128755;</div><div class="pace-name">Sled Push (50m x4)</div><div><div class="pace-effort" style="color:var(--red)">High knee risk</div><div class="pace-heat2">Controlled. Don't race it.</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#128279;</div><div class="pace-name">Sled Pull (50m x4)</div><div><div class="pace-effort" style="color:var(--yellow)">Steady</div><div class="pace-heat2">Watch neck on rope</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#128188;</div><div class="pace-name">Farmer Carry (200m x4)</div><div><div class="pace-effort" style="color:var(--red)">High neck risk</div><div class="pace-heat2">Chin tuck. Stop if tingling.</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#127959;</div><div class="pace-name">Sandbag Lunge (100m x4)</div><div><div class="pace-effort" style="color:var(--red)">High knee risk</div><div class="pace-heat2">Knee over toe. Slow.</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#128675;</div><div class="pace-name">Row (1000m x4)</div><div><div class="pace-effort" style="color:var(--green)">Safest station</div><div class="pace-heat2">Sit tall. Pace deliberately.</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#127936;</div><div class="pace-name">Wall Ball (100 reps x4)</div><div><div class="pace-effort" style="color:var(--green)">He can do this</div><div class="pace-heat2">Sets of 25-25. Watch depth.</div></div></div>
+    <div class="pace-station"><div class="pace-icon">&#129395;</div><div class="pace-name">Burpee Broad Jump (80m x4)</div><div><div class="pace-effort" style="color:var(--yellow)">Pace early</div><div class="pace-heat2">Step-back if knee flares.</div></div></div>
+  </div>
+  <table class="station-table">
+    <thead><tr><th>Station</th><th>Race Spec</th><th>Abhi's Mod</th><th>Risk</th></tr></thead>
+    <tbody>
+      <tr><td><div class="station-name">Run</div></td><td style="color:var(--muted)">1km x8</td><td><div class="station-mod">HR &lt;165. No sprinting. Walk transitions.</div></td><td><span class="station-risk" style="background:rgba(245,200,66,0.15);color:var(--yellow)">Med</span></td></tr>
+      <tr><td><div class="station-name">Ski Erg</div></td><td style="color:var(--muted)">1000m x4</td><td><div class="station-mod">Chin tuck. Tall spine. No forward poke.</div></td><td><span class="station-risk" style="background:rgba(245,200,66,0.15);color:var(--yellow)">Med</span></td></tr>
+      <tr><td><div class="station-name">Sled Push</div></td><td style="color:var(--muted)">50m x4</td><td><div class="station-mod">High knee load. Pain 4/10+ = slow down.</div></td><td><span class="station-risk" style="background:rgba(232,64,64,0.15);color:var(--red)">High</span></td></tr>
+      <tr><td><div class="station-name">Sled Pull</div></td><td style="color:var(--muted)">50m x4</td><td><div class="station-mod">Watch neck tension on rope grip.</div></td><td><span class="station-risk" style="background:rgba(245,200,66,0.15);color:var(--yellow)">Med</span></td></tr>
+      <tr><td><div class="station-name">Farmer Carry</div></td><td style="color:var(--muted)">200m x4</td><td><div class="station-mod">Chin tuck through. Stop if arm tingling.</div></td><td><span class="station-risk" style="background:rgba(232,64,64,0.15);color:var(--red)">High</span></td></tr>
+      <tr><td><div class="station-name">Sandbag Lunge</div></td><td style="color:var(--muted)">100m x4</td><td><div class="station-mod">Knee over toe. No cave. Reduce load if needed.</div></td><td><span class="station-risk" style="background:rgba(232,64,64,0.15);color:var(--red)">High</span></td></tr>
+      <tr><td><div class="station-name">Row</div></td><td style="color:var(--muted)">1000m x4</td><td><div class="station-mod">Safest. Sit tall. Do not blow up here.</div></td><td><span class="station-risk" style="background:rgba(62,207,106,0.15);color:var(--green)">Low</span></td></tr>
+      <tr><td><div class="station-name">Wall Ball</div></td><td style="color:var(--muted)">100 reps x4</td><td><div class="station-mod">Sets of 25-25. Monitor knee depth in squat.</div></td><td><span class="station-risk" style="background:rgba(245,200,66,0.15);color:var(--yellow)">Med</span></td></tr>
+      <tr><td><div class="station-name">Burpee BJ</div></td><td style="color:var(--muted)">80m x4</td><td><div class="station-mod">Step-back in training. Full if knee ok on race day.</div></td><td><span class="station-risk" style="background:rgba(245,200,66,0.15);color:var(--yellow)">Med</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- NUTRITION -->
+<div id="nutrition" class="section">
+  <div class="section-title">Nutrition Plan</div>
+  <div class="section-desc">90kg &middot; 23% BF &middot; Performance fuel for 4 weeks</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;margin-bottom:12px">Daily Targets</div>
+    <div class="prog-wrap"><div class="prog-label"><span>Protein</span><span style="color:var(--orange)">162&ndash;180g/day</span></div><div class="prog-bar"><div class="prog-fill" style="width:85%;background:var(--orange)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Carbohydrates</span><span style="color:var(--blue)">300&ndash;400g/day</span></div><div class="prog-bar"><div class="prog-fill" style="width:70%;background:var(--blue)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Fats</span><span style="color:var(--yellow)">70&ndash;90g/day</span></div><div class="prog-bar"><div class="prog-fill" style="width:45%;background:var(--yellow)"></div></div></div>
+    <div class="prog-wrap"><div class="prog-label"><span>Water</span><span style="color:var(--green)">3.5&ndash;4L/day</span></div><div class="prog-bar"><div class="prog-fill" style="width:80%;background:var(--green)"></div></div></div>
+  </div>
+  <div class="sub-heading">Training Day Meals</div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">7:00</div><div class="meal-name">Pre-Training Breakfast</div><div class="meal-cal">~600 kcal</div></div><div class="meal-body"><ul><li>1 cup oats + banana + honey</li><li>3 whole eggs scrambled</li><li>1 glass milk or oat milk</li><li>Black coffee &middot; 500ml water on waking</li></ul></div></div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">10:30</div><div class="meal-name">Post-Training Recovery</div><div class="meal-cal">~400 kcal</div></div><div class="meal-body"><ul><li>Whey shake 30g within 30 min of finishing</li><li>2 rice cakes with peanut butter</li><li>Electrolyte drink + creatine 5g</li></ul></div></div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">1:00</div><div class="meal-name">Lunch &mdash; Main Fuel Meal</div><div class="meal-cal">~700 kcal</div></div><div class="meal-body"><ul><li>200g rice or 2 roti</li><li>200g chicken / paneer / dal</li><li>Sabzi + salad with olive oil</li><li>1 cup curd</li></ul></div></div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">4:00</div><div class="meal-name">Afternoon Snack</div><div class="meal-cal">~250 kcal</div></div><div class="meal-body"><ul><li>2 bananas or 1 cup fruit</li><li>Handful mixed nuts</li><li>500ml water</li></ul></div></div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">7:30</div><div class="meal-name">Dinner &mdash; Recovery Focused</div><div class="meal-cal">~600 kcal</div></div><div class="meal-body"><ul><li>200g chicken / fish / eggs / paneer</li><li>Sweet potato or 1 cup rice</li><li>Large portion vegetables</li><li>Omega-3 fish oil with meal</li></ul></div></div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">9:30</div><div class="meal-name">Before Bed</div><div class="meal-cal">~150 kcal</div></div><div class="meal-body"><ul><li>1 cup warm milk or 200g curd</li><li>Magnesium glycinate 300mg</li><li>Optional: 20g casein if underfed</li></ul></div></div>
+  <div class="sub-heading">Race Night Before (25 July)</div>
+  <div class="meal-card"><div class="meal-header"><div class="meal-time">7:00pm</div><div class="meal-name">Carb Load Dinner</div><div class="meal-cal">~900 kcal</div></div><div class="meal-body"><ul><li>Large pasta or 3 cups rice</li><li>Lean protein &mdash; chicken or eggs</li><li>Light sauce, no heavy spice or dairy</li><li>No new or unusual foods tonight</li><li>Finish eating by 7:30pm</li></ul></div></div>
+  <div class="alert alert-yellow"><strong>What NOT to do this block</strong>No skipping meals &middot; No fasted training &middot; No cutting carbs &middot; No new foods race week &middot; No alcohol week of race</div>
+</div>
+
+<!-- RECOVERY -->
+<div id="recovery" class="section">
+  <div class="section-title">Recovery Protocol</div>
+  <div class="section-desc">Daily &middot; Injury-specific &middot; Between heats &middot; Sleep</div>
+  <div class="sleep-block"><h4>Knee &mdash; Every Session</h4><ul><li>Ice immediately post session &mdash; 15 min wrapped</li><li>Leg elevation 20 min post training</li><li>No back-to-back leg-heavy days in weeks 1&ndash;2</li><li>VMO terminal knee extensions 3x15 daily</li><li>Step-ups on low box &mdash; 3x10 each leg, controlled</li><li>Sharp pain 4/10+ = stop that movement immediately</li><li>Any swelling = report same day, do not train through it</li></ul></div>
+  <div class="sleep-block"><h4>Cervical &mdash; Daily</h4><ul><li>Chin tucks x10 morning and night every day</li><li>Upper trap stretch &mdash; 30 sec each side</li><li>Levator scapulae stretch &mdash; 30 sec each side</li><li>No heavy load behind or above neck</li><li>Neutral neck pillow &mdash; no forward head flexion sleeping</li><li>Limit looking-down phone use this entire block</li><li>STOP immediately if arm or hand tingling appears</li></ul></div>
+  <div class="sleep-block"><h4>Sleep Protocol</h4><ul><li>Minimum 8 hrs &middot; Target 9 hrs during training weeks</li><li>Sleep before midnight &mdash; GH peaks 10pm&ndash;2am</li><li>Room temperature 18&ndash;20&deg;C</li><li>No screens 45 min before bed</li><li>Magnesium glycinate 300mg every night</li><li>Race eve: if anxious, don't force sleep &mdash; bank it 2 nights prior</li><li>Consistent wake time even on rest days</li></ul></div>
+  <div class="sleep-block"><h4>Active Recovery Tools</h4><ul><li>Cold shower 2&ndash;3 min post hard sessions</li><li>Foam roll: quads, IT band, thoracic spine &mdash; 10 min</li><li>Compression on legs 2 hrs after hard session</li><li>20 min walk every rest day &mdash; no full sedentary rest</li><li>Epsom salt bath on very sore days &mdash; 20 min</li></ul></div>
+  <div class="sleep-block"><h4>Between Heats &mdash; Race Day</h4><ul><li>Sit down immediately &mdash; off your feet</li><li>Fast carbs within 10 min &mdash; banana, dates, sports drink</li><li>Sip electrolytes every few minutes</li><li>Light walk at 15 min mark &mdash; don't seize up</li><li>Change socks if possible</li><li>Mental reset &mdash; heat 2 is a new race</li><li>20&ndash;25 min gap between heats minimum</li><li>Ice knee briefly if it's complaining</li></ul></div>
+  <div class="sleep-block"><h4>Weekly Recovery Rules</h4><ul><li>Weeks 1&ndash;2: Never train 3 days in a row</li><li>Week 3: Max 2 consecutive days then mandatory rest</li><li>Week 4: More rest than training</li><li>Energy crash mid-week = take extra rest day. Don't push.</li><li>Soreness is okay. Joint pain is not. Know the difference.</li></ul></div>
+</div>
+
+<!-- STRENGTH -->
+<div id="strength" class="section">
+  <div class="section-title">Strength Training</div>
+  <div class="section-desc">4-week block &middot; Knee + cervical modified &middot; 2 sessions/week</div>
+
+  <div class="alert alert-orange"><strong>Why Strength in This Block</strong>He has 40kg muscle mass at 90kg &mdash; undertrained relative to bodyweight. Sled push, sandbag lunge, and farmer carry all demand muscular strength under fatigue. Without strength work, he will break down at stations 6&ndash;9 in the double. Strength sessions are programmed on non-cardio days.</div>
+
+  <div class="alert alert-yellow"><strong>Rules for His Conditions</strong>No heavy barbell back squat &mdash; knee + cervical risk. No overhead pressing heavy &mdash; cervical. No loaded good mornings or behind-neck anything. All loads moderate &mdash; endurance rep ranges, not max strength. Stop any exercise if knee hits 4/10 pain or arm tingling starts.</div>
+
+  <div class="sub-heading">Strength Session Structure</div>
+  <div class="sleep-block">
+    <h4>Every Strength Session Format</h4>
+    <ul>
+      <li>Warm up: 8 min &mdash; bike or row easy + dynamic mobility</li>
+      <li>VMO activation: Terminal knee extensions 2x15 each leg</li>
+      <li>Chin tuck activation: 10 reps before any loaded carry</li>
+      <li>Main work: 4 exercises &mdash; 3 sets each</li>
+      <li>Cool down: 10 min stretch &mdash; quads, hips, upper trap</li>
+      <li>Ice knee after every session &mdash; 15 min</li>
+    </ul>
+  </div>
+
+  <div class="sub-heading">Week 1 &amp; 2 &mdash; Foundation Strength</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--orange)">SESSION A &mdash; Lower Body + Core &nbsp;<span style="font-size:11px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">(Tue or Thu)</span></div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">1</div>
+      <div class="day-content">
+        <strong>Goblet Squat</strong>
+        <span>3 sets x 15 reps &middot; 16&ndash;20kg KB &middot; Full depth only if knee allows &middot; Controlled descent 3 sec</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--yellow);white-space:nowrap;padding-top:2px">Knee ⚠️</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">2</div>
+      <div class="day-content">
+        <strong>Romanian Deadlift (Dumbbell)</strong>
+        <span>3 sets x 12 reps &middot; 2x20kg DBs &middot; Hinge at hips, neutral spine &middot; No rounding lower back</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">3</div>
+      <div class="day-content">
+        <strong>Step-Up (Box) &mdash; Loaded</strong>
+        <span>3 sets x 10 each leg &middot; Hold 2x10kg DBs &middot; Slow and controlled &middot; VMO rehab + strength</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--yellow);white-space:nowrap;padding-top:2px">Knee ⚠️</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">4</div>
+      <div class="day-content">
+        <strong>Plank Variations Circuit</strong>
+        <span>3 rounds &middot; Plank 45sec + Side plank 30sec each &middot; Dead bug 10 reps &middot; No neck strain</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px;border-bottom:none">
+      <div class="day-label">5</div>
+      <div class="day-content">
+        <strong>Glute Bridge &mdash; Single Leg</strong>
+        <span>3 sets x 12 each side &middot; Bodyweight to start &middot; Builds glute strength to protect knee</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--blue)">SESSION B &mdash; Upper Body + Pull &nbsp;<span style="font-size:11px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">(Sat or alternate day)</span></div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">1</div>
+      <div class="day-content">
+        <strong>Seated Cable Row / DB Row</strong>
+        <span>3 sets x 15 reps &middot; Moderate weight &middot; Retract scapula &middot; Chin tucked &middot; Mimics ski erg pull</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">2</div>
+      <div class="day-content">
+        <strong>Dumbbell Floor Press</strong>
+        <span>3 sets x 15 reps &middot; 2x16kg DBs &middot; Floor limits range &mdash; safer for shoulder &middot; No bench press heavy</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">3</div>
+      <div class="day-content">
+        <strong>Farmer Carry &mdash; Heavy</strong>
+        <span>3 sets x 50m &middot; 2x22&ndash;24kg &middot; Chin tuck &middot; Grip strength + cervical endurance &middot; Stop if tingling</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--red);white-space:nowrap;padding-top:2px">Cervical ⚠️</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">4</div>
+      <div class="day-content">
+        <strong>Lat Pulldown or Band Pull-Apart</strong>
+        <span>3 sets x 15 reps &middot; Vertical pull &middot; Builds lat strength for ski erg and rowing</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+    <div class="day-row" style="padding:10px 16px;border-bottom:none">
+      <div class="day-label">5</div>
+      <div class="day-content">
+        <strong>Pallof Press &mdash; Anti-Rotation Core</strong>
+        <span>3 sets x 12 each side &middot; Cable or band &middot; Core stability for all HYROX carries</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);white-space:nowrap;padding-top:2px">Safe ✓</div>
+    </div>
+  </div>
+
+  <div class="sub-heading">Week 3 &mdash; Add Load &amp; Specificity</div>
+  <div class="alert alert-green"><strong>Week 3 Progressions</strong>Increase all loads by 10&ndash;15%. Add one HYROX-specific superset: goblet squat x10 immediately into farmer carry 50m. This trains the carry-under-fatigue pattern he will face on race day. Keep reps same, increase weight.</div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--orange)">SESSION A &mdash; Week 3 Upgrade</div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">1</div>
+      <div class="day-content">
+        <strong>Goblet Squat → into Wall Ball x10</strong>
+        <span>3 supersets &middot; Squat 20kg x12 immediately into wall ball 10kg x10 &middot; No rest between &middot; 90sec rest after</span>
+      </div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">2</div>
+      <div class="day-content">
+        <strong>Romanian Deadlift &rarr; into Step-Up</strong>
+        <span>3 supersets &middot; RDL 2x22kg x10 &rarr; step-up x8 each side &middot; Posterior chain + VMO combo</span>
+      </div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label">3</div>
+      <div class="day-content">
+        <strong>Loaded Carry Complex</strong>
+        <span>3 rounds: Farmer carry 2x20kg 50m &rarr; Sandbag hold walk 30m &rarr; rest 2 min. Simulates race stations back to back.</span>
+      </div>
+    </div>
+    <div class="day-row" style="padding:10px 16px;border-bottom:none">
+      <div class="day-label">4</div>
+      <div class="day-content">
+        <strong>Core Finisher</strong>
+        <span>Ab wheel or dead bug 3x10 &middot; Side plank 3x45sec &middot; Hollow hold 3x30sec</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">Week 4 &mdash; Taper (No Heavy Strength)</div>
+  <div class="sleep-block">
+    <h4>Strength Taper Rules</h4>
+    <ul>
+      <li>One light strength session only &mdash; Monday 21 July</li>
+      <li>All loads at 50&ndash;60% of week 3</li>
+      <li>Reps stay same &mdash; only intensity drops</li>
+      <li>Focus: movement quality, not fatigue</li>
+      <li>No strength training after 21 July &mdash; let muscles reload</li>
+      <li>VMO extensions and chin tucks continue daily as rehab</li>
+    </ul>
+  </div>
+
+  <div class="sub-heading">Knee Rehab Exercises &mdash; Daily</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px">
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label" style="min-width:40px">VMO</div>
+      <div class="day-content"><strong>Terminal Knee Extension</strong><span>Band around knee &middot; 3x15 each leg &middot; Morning and post session &middot; Strengthens inner quad that stabilises patella</span></div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label" style="min-width:40px">Glute</div>
+      <div class="day-content"><strong>Clamshell with Band</strong><span>Light band &middot; 3x20 each side &middot; Hip abductor strength reduces knee valgus under load</span></div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label" style="min-width:40px">Quad</div>
+      <div class="day-content"><strong>Straight Leg Raise</strong><span>Lying flat &middot; 3x15 each leg &middot; Strengthens quad without loading the joint &middot; Safe every day</span></div>
+    </div>
+    <div class="day-row" style="padding:10px 16px;border-bottom:none">
+      <div class="day-label" style="min-width:40px">Step</div>
+      <div class="day-content"><strong>Eccentric Step Down</strong><span>Low box &middot; 3x8 each leg &middot; Slow 4-sec lowering &middot; Controls patella tracking under load</span></div>
+    </div>
+  </div>
+
+  <div class="sub-heading">Cervical Strength &mdash; Daily</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px">
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label" style="min-width:40px">Deep</div>
+      <div class="day-content"><strong>Chin Tuck (Deep Neck Flexor)</strong><span>x10 reps &middot; Hold 5 sec &middot; Morning + night &middot; Core exercise for cervical stability</span></div>
+    </div>
+    <div class="day-row" style="padding:10px 16px">
+      <div class="day-label" style="min-width:40px">Trap</div>
+      <div class="day-content"><strong>Prone Y-T-W Raises</strong><span>Light plates or bodyweight &middot; 2x10 each shape &middot; Builds scapular stability &middot; Reduces neck load on carries</span></div>
+    </div>
+    <div class="day-row" style="padding:10px 16px;border-bottom:none">
+      <div class="day-label" style="min-width:40px">Mob</div>
+      <div class="day-content"><strong>Upper Trap + Levator Stretch</strong><span>30 sec each side &middot; 2x daily &middot; Release neck tightness post training</span></div>
+    </div>
+  </div>
+
+  <div class="alert alert-red"><strong>Exercises Completely Avoided This Block</strong>Back squat with barbell &middot; Behind-neck press or lat pulldown &middot; Heavy overhead press &middot; Good mornings &middot; Barbell shrugs &middot; Any loaded neck flexion &middot; Kipping pull-ups &middot; Box jumps landing on bad knee</div>
+</div>
+
+<!-- SUPPS -->
+<div id="supps" class="section">
+  <div class="section-title">Supplement Stack</div>
+  <div class="section-desc">Evidence-based &middot; Simple &middot; 4-week block &middot; 90kg male</div>
+  <div class="alert alert-red"><strong>Rule #1 &mdash; Nothing New on Race Day</strong>Every supplement trialled in training first. No new pre-workout, bars, or gels on race day. Zero exceptions.</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 16px;margin-bottom:16px">
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(74,158,255,0.12)">&#9889;</div><div><div class="supp-name">Creatine Monohydrate</div><div class="supp-detail">Daily &middot; Any time &middot; Start today &middot; No loading phase needed</div></div><div class="supp-dose">5g/day</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(62,207,106,0.12)">&#127769;</div><div><div class="supp-name">Magnesium Glycinate</div><div class="supp-detail">Before bed &middot; Sleep quality + muscle recovery + cramp prevention</div></div><div class="supp-dose">300mg</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(245,200,66,0.12)">&#9728;</div><div><div class="supp-name">Vitamin D3 + K2</div><div class="supp-detail">Morning with food &middot; Performance, immunity, bone health</div></div><div class="supp-dose">3000 IU</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(74,158,255,0.12)">&#128167;</div><div><div class="supp-name">Electrolytes</div><div class="supp-detail">During + post training &middot; Sodium, potassium, magnesium blend</div></div><div class="supp-dose">Per label</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(244,98,42,0.12)">&#129385;</div><div><div class="supp-name">Whey Protein</div><div class="supp-detail">Within 30 min post session &middot; Hit 162&ndash;180g protein/day total</div></div><div class="supp-dose">25&ndash;30g</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(62,207,106,0.12)">&#128031;</div><div><div class="supp-name">Omega-3 Fish Oil</div><div class="supp-detail">Morning with food &middot; Anti-inflammatory &middot; Helps knee + cervical tissue</div></div><div class="supp-dose">2&ndash;3g EPA/DHA</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(232,64,64,0.12)">&#9749;</div><div><div class="supp-name">Caffeine</div><div class="supp-detail">Race day only &middot; 45 min before start &middot; Don't use daily &mdash; preserve sensitivity</div></div><div class="supp-dose">200mg</div></div>
+    <div class="supp-row"><div class="supp-icon" style="background:rgba(245,200,66,0.12)">&#129452;</div><div><div class="supp-name">Collagen + Vitamin C</div><div class="supp-detail">Morning pre-training &middot; Supports knee joint + connective tissue repair</div></div><div class="supp-dose">10&ndash;15g</div></div>
+  </div>
+  <div class="sleep-block"><h4>Priority Buy Order &mdash; This Week</h4><ul><li>Creatine monohydrate &mdash; highest evidence ROI</li><li>Magnesium glycinate &mdash; sleep + recovery game changer</li><li>Whey protein if not hitting targets from food</li><li>Electrolyte tabs or powder</li></ul></div>
+  <div class="sleep-block"><h4>Add Next Week</h4><ul><li>Omega-3 fish oil &mdash; especially for knee inflammation</li><li>Vitamin D3 + K2</li><li>Collagen peptides &mdash; for joint recovery</li></ul></div>
+  <div class="alert alert-yellow"><strong>Avoid This Block</strong>Fat burners &middot; Stimulant pre-workout blends &middot; Diuretics &middot; Alcohol &middot; Anything new race week</div>
+</div>
+
+<!-- RACE DAY -->
+<div id="raceday" class="section">
+  <div class="section-title">Race Day</div>
+  <div class="section-desc">26 July 2026 &middot; HYROX Double &middot; Execute. Don't improvise.</div>
+  <div class="race-flag-banner"><h2>&#127937; 26 JULY 2026</h2><p>HYROX Double &middot; Cross both finish lines. Healthy.</p></div>
+  <div class="alert alert-orange"><strong>The One Rule Abhi Must Internalize</strong>Heat 1 will feel easy for the first 3 stations. That is the trap. 70% effort in heat 1. Walk between stations if HR hits 170+. Heat 2 is where the race happens. Finish mission only.</div>
+  <div class="sub-heading">Night Before &mdash; 25 July</div>
+  <div class="sleep-block"><h4>Evening Checklist</h4><ul><li>Big carb + protein meal finished by 7:30pm</li><li>Magnesium 300mg before bed</li><li>Pack race bag tonight &mdash; don't rush tomorrow</li><li>Lay out: shoes, socks, kit, nutrition, water</li><li>No alcohol &middot; No heavy spice &middot; No new food</li><li>Sleep by 10pm &mdash; target 8&ndash;9 hrs</li><li>Anxious is normal. The work is done. Trust it.</li></ul></div>
+  <div class="sub-heading">Race Morning Timeline</div>
+  <div class="timeline-item"><div class="timeline-dot">&#127749;</div><div><div class="timeline-time">T&minus;3 hours</div><div class="timeline-title">Wake + Breakfast</div><div class="timeline-desc">Oats + banana + 2 eggs + coffee. 500ml water immediately. No new foods today.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#128167;</div><div><div class="timeline-time">T&minus;2 hours</div><div class="timeline-title">Hydration Phase</div><div class="timeline-desc">Sip 500ml electrolyte water. Light movement. Arrive at venue. Don't sit still too long.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#128138;</div><div><div class="timeline-time">T&minus;45 min</div><div class="timeline-title">Caffeine + Warm Up</div><div class="timeline-desc">200mg caffeine. 10 min easy jog. Dynamic mobility: leg swings, hip circles, arm circles. Glute bridges 2x10.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#127919;</div><div><div class="timeline-time">T&minus;15 min</div><div class="timeline-title">Mental Prep</div><div class="timeline-desc">Review station order. Repeat: 70% heat 1. Walk transitions if HR spikes. Deep breaths. Ready.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#127937;</div><div><div class="timeline-time">HEAT 1</div><div class="timeline-title">First Race &mdash; 70% Effort</div><div class="timeline-desc">Controlled throughout. Breathe. Walk between stations if HR hits 170+. Protect knee on sled and lunges. Surviving smart IS the strategy.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#127820;</div><div><div class="timeline-time">BETWEEN HEATS</div><div class="timeline-title">Recovery Window &mdash; 20&ndash;30 min</div><div class="timeline-desc">Sit down immediately. Banana + dates + electrolyte drink within 10 min. Change socks. At 15 min: light walk to stay loose. Mental reset: heat 2 is a new race.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#128293;</div><div><div class="timeline-time">HEAT 2</div><div class="timeline-title">Second Race &mdash; 80% Effort</div><div class="timeline-desc">Now he earns it. He has fuel. He paced heat 1. From station 5 onwards dig deeper. Last run &mdash; finish strong. That is the moment.</div></div></div>
+  <div class="timeline-item"><div class="timeline-dot">&#127942;</div><div><div class="timeline-time">FINISH</div><div class="timeline-title">Done. He did it.</div><div class="timeline-desc">Ice knee immediately. Electrolytes + protein within 30 min. Sit. Breathe. HYROX Double with a healing knee and cervical issue. That is rare.</div></div></div>
+  <div class="alert alert-green" style="margin-top:8px"><strong>Final Coach Note</strong>HR recovery is good. 30 wall balls unbroken. Mobility 10/10. He has the tools. The aerobic and conditioning gap is real but 4 weeks of focused work plus smart pacing gets him across both lines. Plan is done. Now execute.</div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="kneeModal" onclick="closeModal('kneeModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('kneeModal')">&#10005;</button>
+    <h3 style="color:var(--yellow)">Knee Protocol</h3>
+    <p><strong>Status: 80% recovered</strong></p>
+    <p>Highest risk: Sled Push, Sandbag Lunge, Running. Any knee-loaded exercise under fatigue must be monitored.</p>
+    <p><strong>Every session:</strong> Ice 15 min immediately after. Leg elevation 20 min. VMO extensions 3x15 daily.</p>
+    <p><strong>Stop signs:</strong> Sharp pain 4/10+, swelling, locking, clicking with pain. Stop the movement and report same day.</p>
+    <p><strong>Race day:</strong> Step-back burpee available. Reduce sled load if needed. Knee over toe always on lunges.</p>
+  </div>
+</div>
+<div class="modal-overlay" id="cervModal" onclick="closeModal('cervModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('cervModal')">&#10005;</button>
+    <h3 style="color:var(--red)">Cervical Protocol</h3>
+    <p><strong>Status: Active issue &mdash; managed carefully</strong></p>
+    <p>Highest risk: Farmer Carry, Ski Erg, Sandbag on shoulders. Loaded carry or pull can compress cervical spine if form breaks.</p>
+    <p><strong>Daily non-negotiables:</strong> Chin tucks x10 morning and night. Upper trap stretch 30 sec each side.</p>
+    <p><strong>Hard stop:</strong> Tingling or numbness in arms or fingers during any carry = stop immediately. Nerve involvement. Do not train through this.</p>
+    <p><strong>Sleep:</strong> Neutral neck pillow. No forward head position while sleeping.</p>
+  </div>
+</div>
+<div class="modal-overlay" id="goalModal" onclick="closeModal('goalModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('goalModal')">&#10005;</button>
+    <h3 style="color:var(--green)">Race Goal</h3>
+    <p><strong>Goal: Safe Finish &mdash; Both Heats</strong></p>
+    <p>4 weeks prep, 80% knee, active cervical issue. The goal is not time. The goal is crossing both finish lines healthy and intact.</p>
+    <p><strong>Heat 1:</strong> 70% effort. Survive smart. Protect high-risk stations.</p>
+    <p><strong>Heat 2:</strong> 80% effort. Pacing heat 1 correctly makes heat 2 possible.</p>
+    <p><strong>What winning looks like:</strong> He finishes. He doesn't re-injure the knee. He walks away able to train again the following week.</p>
+  </div>
+</div>
+
+<script>
+const raceDate = new Date('2026-07-26T00:00:00');
+function updateCountdown(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const diff=Math.ceil((raceDate-now)/86400000);
+  const d=diff>0?diff:0;
+  document.getElementById('daysLeft').textContent=d;
+  document.getElementById('statDays').textContent=d;
+}
+updateCountdown();
+
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function toggleWeek(id){document.getElementById(id).classList.toggle('open')}
+document.getElementById('w1').classList.add('open');
+
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+const sessions=[
+  {id:'s1',date:'Mon',dateLabel:'30 Jun',name:'Session 1 — Aerobic + Stations',sub:'Zone 2 run 20min, row 1500m, wall ball, ski erg',type:'session',week:1},
+  {id:'s2',date:'Wed',dateLabel:'2 Jul',name:'Session 2 — Carry + Conditioning',sub:'Farmer carry, step-back burpees, sled push/pull',type:'session',week:1},
+  {id:'s3',date:'Fri',dateLabel:'4 Jul',name:'Session 3 — Full Circuit x2',sub:'Row, wall ball, ski erg, carry, burpees. 65% effort.',type:'session',week:1},
+  {id:'s4',date:'Mon',dateLabel:'7 Jul',name:'Session 4 — Run + Row Intervals',sub:'5x500m run, 4x500m row at 70%',type:'session',week:2},
+  {id:'s5',date:'Wed',dateLabel:'9 Jul',name:'Session 5 — Station Circuit x4',sub:'All stations x4 rounds, 3min rest between',type:'session',week:2},
+  {id:'s6',date:'Fri',dateLabel:'11 Jul',name:'Session 6 — HYROX Simulation',sub:'Single full race at 70% effort. Time each station.',type:'session',week:2},
+  {id:'s7',date:'Sun',dateLabel:'13 Jul',name:'Session 7 — Zone 2 Run',sub:'35 min easy continuous run, HR 120-140',type:'session',week:2},
+  {id:'s8',date:'Mon',dateLabel:'14 Jul',name:'KEY: Double Simulation',sub:'45min effort > 25min rest > 45min effort. 65%.',type:'session',week:3},
+  {id:'s9',date:'Wed',dateLabel:'16 Jul',name:'Session 9 — Weakness Work',sub:'Run intervals, burpees, sled, ski erg',type:'session',week:3},
+  {id:'s10',date:'Fri',dateLabel:'18 Jul',name:'Session 10 — Peak Simulation',sub:'Single full HYROX at 80%. Hardest training day.',type:'session',week:3},
+  {id:'s11',date:'Sun',dateLabel:'20 Jul',name:'Session 11 — Flush',sub:'Walk, easy row 1000m, mobility only',type:'session',week:3},
+  {id:'s12',date:'Mon',dateLabel:'21 Jul',name:'Taper 1 — Light Stations',sub:'Each station x8 at 50%. 30min only.',type:'taper',week:4},
+  {id:'s13',date:'Wed',dateLabel:'23 Jul',name:'Taper 2 — Short Jog + Row',sub:'15min jog + 1000m easy row. Done.',type:'taper',week:4},
+  {id:'s14',date:'Fri',dateLabel:'25 Jul',name:'Taper 3 — Race Feel',sub:'10min jog + 2x30sec race pace bursts. Last session.',type:'taper',week:4},
+  {id:'s15',date:'Sun',dateLabel:'26 Jul',name:'RACE DAY',sub:'HYROX Double. Cross both finish lines.',type:'race',week:4},
+];
+
+const totalSessions=sessions.filter(s=>s.type!=='race').length;
+let completed={};
+try{completed=JSON.parse(localStorage.getItem('abhiTracker')||'{}')}catch(e){}
+
+function renderTracker(){
+  const list=document.getElementById('trackerList');
+  const wLabels=['Week 1 — Base (25 Jun–1 Jul)','Week 2 — Build (2–8 Jul)','Week 3 — Simulate (9–15 Jul)','Week 4 — Taper + Race (16–26 Jul)'];
+  let html='';
+  [1,2,3,4].forEach(w=>{
+    html+=`<div class="tracker-week-label">${wLabels[w-1]}</div><div class="tracker-card">`;
+    sessions.filter(s=>s.week===w).forEach(s=>{
+      const done=completed[s.id];
+      const tc=s.type==='race'?'type-race':s.type==='taper'?'type-taper':'type-session';
+      const tl=s.type==='race'?'Race Day':s.type==='taper'?'Taper':'Session';
+      html+=`<div class="tracker-row ${done?'done':''}" onclick="toggleSession('${s.id}')">
+        <div class="tracker-cb">${done?'&#10003;':''}</div>
+        <div class="tracker-date">${s.date}<br><span style="font-size:10px;color:var(--muted)">${s.dateLabel}</span></div>
+        <div class="tracker-info"><div class="tracker-name">${s.name}</div><div class="tracker-sub">${s.sub}</div></div>
+        <span class="tracker-type ${tc}">${tl}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  list.innerHTML=html;
+  const done=Object.keys(completed).length;
+  const pct=Math.round((done/totalSessions)*100);
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statLeft').textContent=Math.max(0,totalSessions-done);
+  document.getElementById('overallFill').style.width=pct+'%';
+}
+
+function toggleSession(id){
+  if(completed[id]){delete completed[id]}else{completed[id]=true}
+  try{localStorage.setItem('abhiTracker',JSON.stringify(completed))}catch(e){}
+  renderTracker();
+}
+
+renderTracker();
+</script>
+</body>
+</html>
